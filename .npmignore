@@ -1,0 +1,9 @@
+# Everything is ignored by default for npm — whitelist only what the CLI needs
+*
+
+# Whitelist
+!dist/cli.js
+!package.json
+!README.md
+!LICENSE
+!CHANGELOG.md

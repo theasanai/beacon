@@ -1,0 +1,146 @@
+{
+  "name": "theasanai-beacon",
+  "displayName": "Beacon \u2014 project identity & AI agent context",
+  "description": "Instantly know which project a window is \u2014 and what your AI agent did in it.",
+  "publisher": "theasanai",
+  "version": "0.5.1",
+  "license": "MIT",
+  "author": "AS AN AI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theasanai/beacon.git"
+  },
+  "homepage": "https://theasanai.com/beacon",
+  "bugs": {
+    "url": "https://github.com/theasanai/beacon/issues"
+  },
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0f1216",
+    "theme": "dark"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai agent",
+    "project colors",
+    "multi-window",
+    "window identity",
+    "peacock",
+    "vibe coding"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "AI",
+    "Visualization"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "beacon",
+          "title": "Beacon",
+          "icon": "media/beacon.svg"
+        }
+      ]
+    },
+    "views": {
+      "beacon": [
+        {
+          "type": "webview",
+          "id": "beacon.card",
+          "name": "Project"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "beacon.pickEmoji",
+        "title": "Beacon: Change Project Emoji"
+      },
+      {
+        "command": "beacon.pickColor",
+        "title": "Beacon: Change Project Color"
+      },
+      {
+        "command": "beacon.resetColors",
+        "title": "Beacon: Reset window colors/title"
+      },
+      {
+        "command": "beacon.hideFromGit",
+        "title": "Beacon: Hide .vscode/settings.json from Git"
+      },
+      {
+        "command": "beacon.enablePreciseStatus",
+        "title": "Beacon: Enable Precise Agent Status (installs 2 Claude Code hooks)"
+      },
+      {
+        "command": "beacon.disablePreciseStatus",
+        "title": "Beacon: Disable Precise Agent Status (removes Beacon hooks)"
+      }
+    ],
+    "configuration": {
+      "title": "Beacon",
+      "properties": {
+        "beacon.applyColors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Color the title bar and status bar with the project color."
+        },
+        "beacon.watchAncestorSessions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Also watch Claude Code sessions launched from ancestor folders (e.g. the workspace's parent or a monorepo root) and show turns that touch this project's files. Takes effect after a window reload."
+        },
+        "beacon.emoji": {
+          "type": "string",
+          "default": "",
+          "description": "Override the auto-picked project emoji."
+        },
+        "beacon.color": {
+          "type": "string",
+          "default": "",
+          "description": "Override the auto-picked project color (hex, e.g. #0e639c). Empty = auto by path hash."
+        },
+        "beacon.recapAfterMinutes": {
+          "type": "number",
+          "default": 5,
+          "description": "Show the 'While you were away' recap after this many minutes out of focus."
+        },
+        "beacon.idleAfterMinutes": {
+          "type": "number",
+          "default": 30,
+          "description": "Agent status turns quiet after this many minutes of silence."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "smoke": "npm run build && node e2e/runTests.mjs",
+    "vscode:prepublish": "npm run build",
+    "package": "npm run build && vsce package --no-dependencies",
+    "publish:npm": "npm run build && sed -i '' 's/\"name\": \"theasanai-beacon\"/\"name\": \"@theasanai\\/beacon\"/' package.json && npm pack && sed -i '' 's/\"name\": \"@theasanai\\/beacon\"/\"name\": \"theasanai-beacon\"/' package.json && npm publish --access public theasanai-beacon-*.tgz && rm -f theasanai-beacon-*.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^2.4.0",
+    "@vscode/vsce": "^3.1.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.0"
+  },
+  "bin": {
+    "beacon": "dist/cli.js"
+  }
+}
